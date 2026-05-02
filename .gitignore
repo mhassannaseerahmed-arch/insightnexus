@@ -1,0 +1,12 @@
+# Root gitignore
+node_modules/
+.env
+.DS_Store
+dist/
+build/
+backend/node_modules/
+frontend/node_modules/
+*.mp4
+*.gif
+*.webp
+ffmpeg*
