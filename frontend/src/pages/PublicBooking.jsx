@@ -6,7 +6,7 @@ const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 const PublicBooking = () => {
   const { slug } = useParams();
   const [clinic, setClinic] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [bookingLoading, setBookingLoading] = useState(true);
   const [error, setError] = useState('');
   const [step, setStep] = useState(1); // 1: Date/Time, 2: Details, 3: Success
 
@@ -36,13 +36,13 @@ const PublicBooking = () => {
     } catch (err) {
       setError('Error loading clinic details');
     } finally {
-      setLoading(false);
+      setBookingLoading(false);
     }
   };
 
   const handleBooking = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setBookingLoading(true);
     try {
       const res = await fetch(`${BASE_URL}/api/public/book`, {
         method: 'POST',
@@ -58,11 +58,11 @@ const PublicBooking = () => {
     } catch (err) {
       alert('Something went wrong');
     } finally {
-      setLoading(false);
+      setBookingLoading(false);
     }
   };
 
-  if (loading && step !== 3) {
+  if (bookingLoading && step !== 3) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 font-sans pt-24">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-600"></div>
@@ -212,10 +212,10 @@ const PublicBooking = () => {
 
               <button 
                 type="submit"
-                disabled={loading}
+                disabled={bookingLoading}
                 className="w-full py-6 rounded-3xl bg-slate-900 hover:bg-violet-600 text-white font-black text-xl shadow-2xl shadow-slate-900/20 transition-all transform hover:-translate-y-1 active:scale-95 disabled:opacity-50"
               >
-                {loading ? 'Processing...' : 'Confirm Appointment'}
+                {bookingLoading ? 'Processing...' : 'Confirm Appointment'}
               </button>
             </form>
           )}

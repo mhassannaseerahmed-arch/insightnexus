@@ -12,14 +12,14 @@ const AddAppointmentModal = ({ onClose, onSuccess }) => {
     appointmentTime: '',
     reason: '',
   });
-  const [loading, setLoading] = useState(false);
+  const [addLoading, setAddLoading] = useState(false);
   const [error, setError]   = useState(null);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setAddLoading(true);
     setError(null);
     try {
       const token = localStorage.getItem('token');
@@ -37,7 +37,7 @@ const AddAppointmentModal = ({ onClose, onSuccess }) => {
     } catch (err) {
       setError(err.message || 'Something went wrong. Try again.');
     } finally {
-      setLoading(false);
+      setAddLoading(false);
     }
   };
 
@@ -141,10 +141,10 @@ const AddAppointmentModal = ({ onClose, onSuccess }) => {
               Cancel
             </button>
             <button
-              type="submit" disabled={loading}
+              type="submit" disabled={addLoading}
               className="flex-grow-[2] rounded-2xl px-6 py-4 text-sm font-black text-white bg-slate-900 hover:bg-violet-600 disabled:opacity-60 transition-all shadow-xl shadow-slate-900/20 active:scale-95"
             >
-              {loading ? 'Booking…' : 'Book Appointment'}
+              {addLoading ? 'Booking…' : 'Book Appointment'}
             </button>
           </div>
         </form>

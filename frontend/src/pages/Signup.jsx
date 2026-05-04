@@ -10,12 +10,12 @@ const Signup = () => {
     password: '',
   });
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [signupLoading, setSignupLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setSignupLoading(true);
     setError('');
 
     try {
@@ -36,7 +36,7 @@ const Signup = () => {
     } catch (err) {
       setError('Something went wrong. Please try again.');
     } finally {
-      setLoading(false);
+      setSignupLoading(false);
     }
   };
 
@@ -108,10 +108,10 @@ const Signup = () => {
             <div>
               <button
                 type="submit"
-                disabled={loading}
+                disabled={signupLoading}
                 className="w-full flex justify-center py-5 px-4 rounded-2xl shadow-xl shadow-slate-900/10 text-sm font-black text-white bg-slate-900 hover:bg-violet-600 transition-all active:scale-95 disabled:opacity-50"
               >
-                {loading ? 'Processing...' : 'Secure My Founding Slot'}
+                {signupLoading ? 'Processing...' : 'Secure My Founding Slot'}
               </button>
               <p className="text-[10px] text-center text-slate-400 font-bold uppercase tracking-widest mt-6">
                 🔒 Encrypted & Secure Clinic Portal
