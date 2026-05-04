@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -23,7 +23,7 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const LandingPage = () => {
-  const [leakData, setLeakData] = React.useState({ appts: 20, rate: 20 });
+  const [leakData, setLeakData] = useState({ appts: 20, rate: 20 });
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 font-sans pt-16">
