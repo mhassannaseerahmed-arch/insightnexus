@@ -7,6 +7,8 @@ const waitlistRoutes    = require('./routes/waitlistRoutes')
 const insightsRoutes    = require('./routes/insightsRoutes')
 const authRoutes        = require('./routes/authRoutes')
 const publicRoutes      = require('./routes/publicRoutes')
+const leadRoutes        = require('./routes/leadRoutes')
+const smsWebhook        = require('./routes/smsWebhook')
 const { runReminders } = require('./services/reminderJob')
 
 // Create express app
@@ -15,12 +17,16 @@ const app = express()
 // Middleware
 app.use(cors())
 app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
 
 app.use('/api/appointments', appointmentRoutes)
 app.use('/api/waitlist',     waitlistRoutes)
 app.use('/api/insights',     insightsRoutes)
 app.use('/api/auth',         authRoutes)
 app.use('/api/public',       publicRoutes)
+app.use('/api/sms',          smsWebhook)
+app.use('/api/leads',        leadRoutes)
+
 
 // Serverless Cron Endpoint for Vercel
 app.get('/api/cron/reminders', async (req, res) => {

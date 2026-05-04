@@ -18,7 +18,12 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.6.1",
     "node-cron": "^4.2.1",
+    "nodemailer": "^8.0.7",
+    "pptxgenjs": "^4.0.1",
     "slugify": "^1.6.9",
     "twilio": "^6.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }

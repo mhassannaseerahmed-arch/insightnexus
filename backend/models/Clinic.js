@@ -31,6 +31,14 @@ const clinicSchema = new mongoose.Schema({
   description: {
     type: String,
   },
+  businessHours: {
+    start: { type: String, default: '09:00' },
+    end: { type: String, default: '17:00' }
+  },
+  smsTemplate: {
+    type: String,
+    default: 'Hi {patientName}, your appointment at {clinicName} is confirmed for {date} at {time}. See you then!'
+  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -8,7 +8,12 @@ import Footer from "./components/Footer";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Settings from "./pages/Settings";
 import PublicBooking from "./pages/PublicBooking";
+import Roadmap from "./components/Roadmap";
+import RevenueLeak from "./components/RevenueLeak";
+import ScheduleAudit from "./components/ScheduleAudit";
+import FOMONotifications from "./components/FOMONotifications";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
@@ -17,16 +22,24 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-const LandingPage = () => (
-  <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 font-sans pt-16">
-    <main className="flex-grow">
-      <Hero />
-      <Features />
-      <Waitlist />
-    </main>
-    <Footer />
-  </div>
-);
+const LandingPage = () => {
+  const [leakData, setLeakData] = React.useState({ appts: 20, rate: 20 });
+
+  return (
+    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 font-sans pt-16">
+      <FOMONotifications />
+      <main className="flex-grow">
+        <Hero />
+        <RevenueLeak onDataChange={setLeakData} />
+        <ScheduleAudit leakData={leakData} />
+        <Roadmap />
+        <Features />
+        <Waitlist />
+      </main>
+      <Footer />
+    </div>
+  );
+};
 
 const App = () => {
   return (
@@ -42,6 +55,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/settings" 
+          element={
+            <ProtectedRoute>
+              <Settings />
             </ProtectedRoute>
           } 
         />

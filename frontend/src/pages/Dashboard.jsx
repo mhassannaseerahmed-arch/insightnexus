@@ -21,9 +21,9 @@ const Dashboard = () => {
   const [reminding, setReminding] = useState({});
   const [activeTab, setActiveTab] = useState('appointments'); // 'appointments' | 'insights'
 
-  const fetchAppointments = async () => {
+  const fetchAppointments = async (isInitial = false) => {
     try {
-      setLoading(true);
+      if (isInitial) setLoading(true);
       const token = localStorage.getItem('token');
       const res  = await fetch(`${API}/all`, {
         headers: { 'x-auth-token': token }
@@ -33,11 +33,16 @@ const Dashboard = () => {
     } catch {
       setError('Could not connect to the server. Is the backend running?');
     } finally {
-      setLoading(false);
+      if (isInitial) setLoading(false);
     }
   };
 
-  useEffect(() => { fetchAppointments(); }, []);
+  useEffect(() => { 
+    fetchAppointments(true); 
+    // Polling for live updates during demos (silent)
+    const interval = setInterval(() => fetchAppointments(false), 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const updateStatus = async (id, status) => {
     const token = localStorage.getItem('token');
@@ -87,38 +92,35 @@ const Dashboard = () => {
   const pending     = appointments.filter(a => a.status === 'pending').length;
   const noShows     = appointments.filter(a => a.status === 'no-show').length;
 
+  const revenueRecovered = confirmed * 200;
+  const revenueLeak      = noShows * 200;
+
   const stats = [
-    { label: "Today's Appointments", value: todayAppts.length, icon: '📅', color: 'from-violet-500 to-indigo-500' },
-    { label: 'Confirmed',            value: confirmed,          icon: '✅', color: 'from-emerald-500 to-teal-500'  },
-    { label: 'Awaiting Response',    value: pending,            icon: '⏳', color: 'from-amber-500 to-orange-500'  },
-    { label: 'No-Shows (Total)',     value: noShows,            icon: '🚫', color: 'from-rose-500 to-pink-500'     },
+    { label: "Today's Appointments", value: todayAppts.length, icon: '📅' },
+    { label: 'Revenue Recovered',    value: `$${revenueRecovered.toLocaleString()}`, icon: '💰', highlight: true },
+    { label: 'Monthly Leak',         value: `$${revenueLeak.toLocaleString()}`, icon: '📉' },
+    { label: 'Awaiting Response',    value: pending,            icon: '⏳' },
   ];
 
   return (
-    <div className="min-h-screen pt-16">
-      {/* Premium White Header */}
-      <div className="relative overflow-hidden bg-white/50 backdrop-blur-md border-b border-slate-100 py-12 mb-10">
-        <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 to-indigo-500/5"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+    <div className="min-h-screen bg-slate-50/50 pt-16">
+      {/* Clean Professional Header */}
+      <div className="bg-white border-b border-slate-200 py-10 mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <h1 className="text-4xl font-black tracking-tight text-slate-900 mb-2">
-              Clinic <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">Dashboard</span>
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+              Clinic <span className="text-violet-600">Dashboard</span>
             </h1>
-            <div className="flex items-center gap-3">
-              <span className="px-3 py-1 rounded-full bg-violet-600 text-white text-[10px] font-black uppercase tracking-widest">
-                Analytics Live
-              </span>
-              <p className="text-slate-400 text-sm font-bold uppercase tracking-tight">
-                {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-              </p>
-            </div>
+            <p className="text-slate-500 text-sm mt-1 font-medium">
+              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+            </p>
           </div>
           <button
             onClick={() => setShowModal(true)}
-            className="group relative flex items-center gap-2 rounded-2xl bg-slate-900 px-8 py-4 text-white font-black shadow-2xl shadow-slate-900/20 hover:bg-violet-600 hover:-translate-y-1 transition-all duration-300"
+            className="flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-3 text-white font-bold text-sm shadow-sm hover:bg-slate-800 transition-all"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
             </svg>
             New Appointment
           </button>
@@ -127,63 +129,71 @@ const Dashboard = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
 
-        {/* Public Booking Link Card (Redesigned) */}
-        <div className="glass-card rounded-3xl p-8 mb-10 overflow-hidden relative group">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-violet-600/10 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-violet-600/20 transition-all duration-700"></div>
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="flex items-center gap-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-2xl flex items-center justify-center text-3xl shadow-xl shadow-violet-600/20 animate-float">
-                🔗
-              </div>
-              <div>
-                <h3 className="text-2xl font-black text-slate-900 mb-1">Public Booking URL</h3>
-                <p className="text-slate-500 font-medium max-w-md">Your clinic is ready for business. Share this link to start accepting appointments instantly.</p>
-              </div>
+        {/* Public Booking Link Card (Simplified) */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-violet-50 text-violet-600 rounded-xl flex items-center justify-center text-xl border border-violet-100">
+              🔗
             </div>
-            <div className="flex items-center gap-3 bg-white/50 p-2 rounded-2xl border border-white w-full md:w-auto shadow-sm">
-              <code className="px-4 py-2 font-bold text-sm text-violet-600 select-all">
-                {window.location.origin}/book/{JSON.parse(localStorage.getItem('clinic') || '{}').slug || 'your-clinic'}
-              </code>
-              <button 
-                onClick={() => {
-                  const url = `${window.location.origin}/book/${JSON.parse(localStorage.getItem('clinic') || '{}').slug || 'your-clinic'}`;
-                  navigator.clipboard.writeText(url);
-                  alert('URL copied to clipboard!');
-                }}
-                className="px-6 py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-violet-600 transition-all shadow-lg shadow-slate-900/10 active:scale-95"
-              >
-                Copy
-              </button>
+            <div>
+              <h3 className="text-lg font-bold text-slate-900">Public Booking Link</h3>
+              <p className="text-slate-500 text-xs font-medium">Share this link to accept online appointments.</p>
             </div>
+          </div>
+          <div className="flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-100 w-full md:w-auto">
+            <code className="px-3 py-1 font-medium text-xs text-slate-600 select-all">
+              {window.location.origin}/book/{JSON.parse(localStorage.getItem('clinic') || '{}').slug || 'clinic'}
+            </code>
+            <button 
+              onClick={() => {
+                const url = `${window.location.origin}/book/${JSON.parse(localStorage.getItem('clinic') || '{}').slug || 'clinic'}`;
+                navigator.clipboard.writeText(url);
+                alert('Copied!');
+              }}
+              className="px-4 py-2 bg-white text-slate-900 border border-slate-200 rounded-lg text-xs font-bold hover:bg-slate-50 transition-all shadow-sm"
+            >
+              Copy
+            </button>
           </div>
         </div>
 
-        {/* Stats (Redesigned) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        {/* Stats (Minimalist) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {stats.map((s) => (
-            <div key={s.label} className="glass-card rounded-3xl p-7 hover:-translate-y-2 transition-all duration-300 group">
-              <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br ${s.color} text-2xl mb-6 shadow-lg shadow-indigo-500/10 group-hover:scale-110 transition-transform`}>
-                {s.icon}
+            <div 
+              key={s.label} 
+              className={`bg-white rounded-2xl p-6 border transition-all ${
+                s.highlight 
+                  ? 'border-emerald-200 shadow-lg shadow-emerald-500/5 ring-4 ring-emerald-500/5' 
+                  : 'border-slate-200 shadow-sm'
+              }`}
+            >
+              <p className={`text-[10px] font-black uppercase tracking-widest mb-1 ${s.highlight ? 'text-emerald-600' : 'text-slate-400'}`}>
+                {s.label}
+              </p>
+              <div className="flex items-baseline gap-2">
+                <span className={`text-3xl font-black tracking-tight ${s.highlight ? 'text-emerald-600' : 'text-slate-900'}`}>
+                  {s.value}
+                </span>
+                <span className="text-xl">{s.icon}</span>
               </div>
-              <p className="text-5xl font-black tracking-tight text-slate-900">{s.value}</p>
-              <p className="text-sm font-bold text-slate-500 mt-2 uppercase tracking-widest">{s.label}</p>
             </div>
           ))}
         </div>
 
-        {/* Tab switcher (Redesigned) */}
-        <div className="flex gap-2 bg-slate-900/5 p-1.5 rounded-2xl mb-10 w-fit backdrop-blur-md border border-slate-200">
+        {/* Tab switcher (Refined) */}
+        <div className="flex gap-1 bg-slate-200/50 p-1 rounded-xl mb-8 w-fit border border-slate-200/50">
           {[
-            { id: 'appointments', label: '📋 Appointments' },
-            { id: 'insights',     label: '📊 AI Insights'  },
+            { id: 'appointments', label: 'Appointments' },
+            { id: 'insights',     label: 'AI Insights'  },
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-8 py-3 rounded-xl text-sm font-black transition-all duration-300 ${
+              className={`px-6 py-2 rounded-lg text-xs font-bold transition-all ${
                 activeTab === tab.id
-                  ? 'bg-white text-violet-600 shadow-xl shadow-violet-600/10 scale-105'
-                  : 'text-slate-500 hover:text-slate-900 hover:bg-white/50'
+                  ? 'bg-white text-slate-900 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700'
               }`}
             >
               {tab.label}
@@ -195,13 +205,13 @@ const Dashboard = () => {
         {activeTab === 'insights' ? (
           <InsightsTab />
         ) : (
-        <div className="glass-card rounded-3xl overflow-hidden">
-          <div className="px-8 py-8 border-b border-slate-100 flex items-center justify-between bg-white/30">
-            <div>
-              <h2 className="text-2xl font-black text-slate-900">All Appointments</h2>
-              <p className="text-sm text-slate-500 mt-1 font-medium">Manage and monitor your patient queue in real-time.</p>
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="px-6 py-6 border-b border-slate-100 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-slate-900">Upcoming Appointments</h2>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Live</span>
             </div>
-            <span className="bg-violet-600 text-white px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest">{appointments.length} TOTAL</span>
           </div>
 
           {loading && (

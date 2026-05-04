@@ -82,11 +82,11 @@ router.put('/:id/status', async (req, res) => {
     // NEW: Send confirmation SMS if status is 'confirmed'
     if (req.body.status === 'confirmed') {
       try {
-        const body = buildConfirmationMessage(appointment);
+        const fullAppt = await Appointment.findById(appointment._id).populate('clinic');
+        const body = buildConfirmationMessage(fullAppt, fullAppt.clinic?.smsTemplate);
         await sendSMS(appointment.patientPhone, body);
       } catch (smsError) {
         console.error('Failed to send confirmation SMS:', smsError.message);
-        // We don't fail the request if SMS fails, but we log it
       }
     }
 

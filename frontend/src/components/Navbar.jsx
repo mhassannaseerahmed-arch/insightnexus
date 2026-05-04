@@ -6,6 +6,8 @@ const Navbar = () => {
   const location = useLocation();
   const isLanding = location.pathname === '/';
 
+  const isLoggedIn = !!localStorage.getItem('token');
+
   return (
     <header className="fixed top-0 inset-x-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,17 +37,34 @@ const Navbar = () => {
                 </a>
               </>
             )}
-            <Link
-              to="/dashboard"
-              className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-bold text-white shadow-xl shadow-slate-900/10 transition-all hover:bg-violet-600 active:scale-95"
-            >
-              Dashboard →
-            </Link>
+            {isLoggedIn ? (
+              <>
+                <Link
+                  to="/settings"
+                  className="text-slate-500 hover:text-slate-900 transition-colors"
+                >
+                  Settings
+                </Link>
+                <Link
+                  to="/dashboard"
+                  className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-bold text-white shadow-xl shadow-slate-900/10 transition-all hover:bg-violet-600 active:scale-95"
+                >
+                  Dashboard →
+                </Link>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-bold text-white shadow-xl shadow-slate-900/10 transition-all hover:bg-violet-600 active:scale-95"
+              >
+                Login
+              </Link>
+            )}
           </nav>
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="md:hidden p-2 rounded-lg text-slate-400 hover:text-slate-900 transition-colors"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
           >
@@ -64,16 +83,25 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden border-t border-white/10 bg-[#0b0f19] px-4 py-6 flex flex-col gap-6 text-base font-medium">
+        <div className="md:hidden border-t border-slate-100 bg-white/95 backdrop-blur-md px-4 py-6 flex flex-col gap-4 text-base font-medium">
           {isLanding && (
             <>
-              <a href="#how-it-works" onClick={() => setMenuOpen(false)} className="text-slate-300 hover:text-white transition-colors">How It Works</a>
-              <a href="#waitlist" onClick={() => setMenuOpen(false)} className="text-slate-300 hover:text-white transition-colors">Early Access</a>
+              <a href="#how-it-works" onClick={() => setMenuOpen(false)} className="text-slate-500 hover:text-slate-900 transition-colors">How It Works</a>
+              <a href="#waitlist" onClick={() => setMenuOpen(false)} className="text-slate-500 hover:text-slate-900 transition-colors">Early Access</a>
             </>
           )}
-          <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="rounded-xl bg-violet-600 text-white px-4 py-3 text-center font-bold shadow-[0_0_15px_rgba(139,92,246,0.3)]">
-            Go to Dashboard →
-          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link to="/settings" onClick={() => setMenuOpen(false)} className="text-slate-500 hover:text-slate-900 transition-colors px-1">Settings</Link>
+              <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="rounded-xl bg-slate-900 text-white px-4 py-3 text-center font-bold shadow-xl shadow-slate-900/10">
+                Go to Dashboard →
+              </Link>
+            </>
+          ) : (
+            <Link to="/login" onClick={() => setMenuOpen(false)} className="rounded-xl bg-slate-900 text-white px-4 py-3 text-center font-bold shadow-xl shadow-slate-900/10">
+              Login
+            </Link>
+          )}
         </div>
       )}
     </header>

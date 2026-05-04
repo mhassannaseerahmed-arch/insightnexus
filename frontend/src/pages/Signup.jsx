@@ -41,33 +41,36 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Get Started
+        <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest text-violet-600 bg-violet-50 border border-violet-100 mb-6">
+          💎 Early Access Program
+        </div>
+        <h2 className="text-4xl font-black text-slate-900 tracking-tighter mb-2">
+          Join the <span className="text-violet-600">Founding 5.</span>
         </h2>
-        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-          Set up your clinic dashboard in seconds
+        <p className="text-sm font-bold text-slate-500 max-w-xs mx-auto leading-relaxed">
+          The first 5 clinics get priority support and <span className="text-slate-900 font-black">50% Lifetime Discount.</span>
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white dark:bg-slate-900 py-8 px-4 shadow-xl shadow-slate-200/50 dark:shadow-none sm:rounded-2xl sm:px-10 border border-slate-100 dark:border-slate-800">
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-10 px-6 shadow-2xl shadow-slate-200/60 sm:rounded-3xl sm:px-12 border border-slate-100">
           <form className="space-y-6" onSubmit={handleSignup}>
             {error && (
-              <div className="bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 p-3 rounded-xl text-sm border border-rose-100 dark:border-rose-800 font-medium">
+              <div className="bg-rose-50 text-rose-700 p-4 rounded-2xl text-sm border border-rose-100 font-bold">
                 {error}
               </div>
             )}
             
             <div>
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
                 Clinic Name
               </label>
               <input
                 type="text"
                 required
-                className="block w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all outline-none"
+                className="block w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white text-slate-900 font-bold placeholder-slate-300 focus:ring-4 focus:ring-violet-500/5 focus:border-violet-500 transition-all outline-none"
                 placeholder="e.g. Smile Design Dental"
                 value={formData.clinicName}
                 onChange={(e) => setFormData({ ...formData, clinicName: e.target.value })}
@@ -75,13 +78,13 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                Email Address
+              <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
+                Work Email
               </label>
               <input
                 type="email"
                 required
-                className="block w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all outline-none"
+                className="block w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white text-slate-900 font-bold placeholder-slate-300 focus:ring-4 focus:ring-violet-500/5 focus:border-violet-500 transition-all outline-none"
                 placeholder="doctor@clinic.com"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -89,13 +92,13 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                Password
+              <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
+                Create Password
               </label>
               <input
                 type="password"
                 required
-                className="block w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all outline-none"
+                className="block w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white text-slate-900 font-bold placeholder-slate-300 focus:ring-4 focus:ring-violet-500/5 focus:border-violet-500 transition-all outline-none"
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -106,17 +109,20 @@ const Signup = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-lg shadow-violet-600/20 text-base font-bold text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:translate-y-0"
+                className="w-full flex justify-center py-5 px-4 rounded-2xl shadow-xl shadow-slate-900/10 text-sm font-black text-white bg-slate-900 hover:bg-violet-600 transition-all active:scale-95 disabled:opacity-50"
               >
-                {loading ? 'Creating Account...' : 'Create Clinic Account'}
+                {loading ? 'Processing...' : 'Secure My Founding Slot'}
               </button>
+              <p className="text-[10px] text-center text-slate-400 font-bold uppercase tracking-widest mt-6">
+                🔒 Encrypted & Secure Clinic Portal
+              </p>
             </div>
           </form>
 
-          <div className="mt-8 text-center text-sm">
-            <span className="text-slate-500">Already have an account?</span>{' '}
-            <Link to="/login" className="font-bold text-violet-600 hover:text-violet-500">
-              Sign in instead
+          <div className="mt-10 text-center text-xs">
+            <span className="text-slate-400 font-bold">HAVE AN ACCOUNT?</span>{' '}
+            <Link to="/login" className="font-black text-violet-600 hover:text-slate-900 transition-colors">
+              SIGN IN HERE
             </Link>
           </div>
         </div>

@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
 
 @theme {
   --color-primary-50: #f5f3ff;
@@ -42,6 +42,16 @@ body {
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+}
+
+@keyframes scan {
+  0% { transform: translateY(-300px); opacity: 0; }
+  50% { opacity: 0.5; }
+  100% { transform: translateY(300px); opacity: 0; }
+}
+
+.animate-scan {
+  animation: scan 3s linear infinite;
 }
 
 @keyframes float {

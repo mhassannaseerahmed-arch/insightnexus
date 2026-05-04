@@ -82,4 +82,42 @@ router.post('/login', async (req, res) => {
   }
 });
 
+const auth = require('../middleware/auth');
+
+// Get current clinic profile
+router.get('/me', auth, async (req, res) => {
+  try {
+    const clinic = await Clinic.findById(req.clinicId).select('-password');
+    if (!clinic) {
+      return res.status(404).json({ success: false, message: 'Clinic not found' });
+    }
+    res.status(200).json({ success: true, clinic });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+router.put('/update-profile', auth, async (req, res) => {
+  try {
+    const { clinicName, phone, address, description, businessHours, smsTemplate } = req.body;
+    const clinic = await Clinic.findById(req.clinicId);
+    
+    if (!clinic) {
+      return res.status(404).json({ success: false, message: 'Clinic not found' });
+    }
+
+    if (clinicName) clinic.clinicName = clinicName;
+    if (phone) clinic.phone = phone;
+    if (address) clinic.address = address;
+    if (description) clinic.description = description;
+    if (businessHours) clinic.businessHours = businessHours;
+    if (smsTemplate) clinic.smsTemplate = smsTemplate;
+
+    await clinic.save();
+    res.status(200).json({ success: true, clinic });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;

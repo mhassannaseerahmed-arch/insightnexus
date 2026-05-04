@@ -56,20 +56,30 @@ const buildReminderMessage = (appointment) => {
 /**
  * Build the appointment confirmation message
  */
-const buildConfirmationMessage = (appointment) => {
-  const date = new Date(appointment.appointmentDate).toLocaleDateString('en-GB', {
+const buildConfirmationMessage = (appointment, template = null) => {
+  const dateStr = new Date(appointment.appointmentDate).toLocaleDateString('en-GB', {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
-  })
+  });
+  const clinicName = appointment.clinic?.clinicName || 'AI Nexus Insight';
+
+  if (template) {
+    return template
+      .replace('{patientName}', appointment.patientName)
+      .replace('{clinicName}',  clinicName)
+      .replace('{date}',        dateStr)
+      .replace('{time}',        appointment.appointmentTime);
+  }
+
   return (
     `Hi ${appointment.patientName}! 👋\n\n` +
     `Great news! Your appointment has been CONFIRMED.\n` +
-    `📅 Date: ${date}\n` +
+    `📅 Date: ${dateStr}\n` +
     `⏰ Time: ${appointment.appointmentTime}\n\n` +
     `We look forward to seeing you!\n\n` +
-    `— AI Nexus Insight`
-  )
+    `— ${clinicName}`
+  );
 }
 
 module.exports = { sendSMS, buildReminderMessage, buildConfirmationMessage }
