@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 
 const Waitlist = () => {
   const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) return;
-    setLoading(true);
+    setWaitlistLoading(true);
     setError(null);
     try {
       const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -24,7 +24,7 @@ const Waitlist = () => {
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {
-      setLoading(false);
+      setWaitlistLoading(false);
     }
   };
 

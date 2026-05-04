@@ -15,7 +15,7 @@ const statusConfig = {
 
 const Dashboard = () => {
   const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [dashLoading, setDashLoading] = useState(true);
   const [error, setError]  = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [reminding, setReminding] = useState({});
@@ -23,7 +23,7 @@ const Dashboard = () => {
 
   const fetchAppointments = async (isInitial = false) => {
     try {
-      if (isInitial) setLoading(true);
+      if (isInitial) setDashLoading(true);
       const token = localStorage.getItem('token');
       const res  = await fetch(`${API}/all`, {
         headers: { 'x-auth-token': token }
@@ -33,7 +33,7 @@ const Dashboard = () => {
     } catch {
       setError('Could not connect to the server. Is the backend running?');
     } finally {
-      if (isInitial) setLoading(false);
+      if (isInitial) setDashLoading(false);
     }
   };
 
@@ -214,7 +214,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {loading && (
+          {dashLoading && (
             <div className="flex flex-col items-center justify-center py-32 text-slate-500">
               <svg className="w-8 h-8 animate-spin mb-4 text-violet-600" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
@@ -233,7 +233,7 @@ const Dashboard = () => {
             </div>
           )}
 
-          {!loading && !error && appointments.length === 0 && (
+          {!dashLoading && !error && appointments.length === 0 && (
             <div className="text-center py-32">
               <p className="text-5xl mb-4">📋</p>
               <p className="text-xl font-bold text-slate-900 dark:text-white mb-2">No appointments yet</p>
@@ -241,7 +241,7 @@ const Dashboard = () => {
             </div>
           )}
 
-          {!loading && !error && appointments.length > 0 && (
+          {!dashLoading && !error && appointments.length > 0 && (
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>

@@ -7,12 +7,12 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setAuthLoading(true);
     setError('');
 
     try {
@@ -33,7 +33,7 @@ const Login = () => {
     } catch (err) {
       setError('Something went wrong. Please try again.');
     } finally {
-      setLoading(false);
+      setAuthLoading(false);
     }
   };
 
@@ -88,10 +88,10 @@ const Login = () => {
             <div>
               <button
                 type="submit"
-                disabled={loading}
+                disabled={authLoading}
                 className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-lg shadow-violet-600/20 text-base font-bold text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:translate-y-0"
               >
-                {loading ? 'Signing in...' : 'Sign In'}
+                {authLoading ? 'Signing in...' : 'Sign In'}
               </button>
             </div>
           </form>
