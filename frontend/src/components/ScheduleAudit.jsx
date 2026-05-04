@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 const ScheduleAudit = ({ leakData }) => {
   const [formData, setFormData] = useState({ name: '', email: '', clinicName: '', phone: '' });
   const [auditInfo, setAuditInfo] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [auditLoading, setAuditLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setAuditLoading(true);
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const res = await fetch(`${apiUrl}/api/leads/request-audit`, {
@@ -22,7 +22,7 @@ const ScheduleAudit = ({ leakData }) => {
     } catch (err) {
       console.error('Audit Request Failed:', err);
     } finally {
-      setLoading(false);
+      setAuditLoading(false);
     }
   };
 
@@ -98,10 +98,10 @@ const ScheduleAudit = ({ leakData }) => {
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                 />
                 <button 
-                  type="submit" disabled={loading}
+                  type="submit" disabled={auditLoading}
                   className="w-full py-5 rounded-2xl bg-slate-900 text-white font-black text-sm hover:bg-violet-600 transition-all shadow-xl shadow-slate-900/20 active:scale-95 disabled:opacity-50"
                 >
-                  {loading ? 'Generating Audit...' : 'Generate My Audit'}
+                  {auditLoading ? 'Generating Audit...' : 'Generate My Audit'}
                 </button>
               </form>
             )}

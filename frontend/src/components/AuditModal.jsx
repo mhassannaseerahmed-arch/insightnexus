@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 
 const AuditModal = ({ isOpen, onClose }) => {
   const [form, setForm] = useState({ name: '', email: '', clinicName: '', phone: '' });
-  const [loading, setLoading] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setModalLoading(true);
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/leads/request-audit`, {
         method: 'POST',
@@ -26,7 +26,7 @@ const AuditModal = ({ isOpen, onClose }) => {
     } catch (err) {
       alert('Error requesting audit');
     } finally {
-      setLoading(false);
+      setModalLoading(false);
     }
   };
 
@@ -93,10 +93,10 @@ const AuditModal = ({ isOpen, onClose }) => {
                 />
               </div>
               <button
-                type="submit" disabled={loading}
+                type="submit" disabled={modalLoading}
                 className="w-full bg-violet-600 hover:bg-violet-500 text-white font-black py-5 rounded-2xl shadow-xl shadow-violet-600/20 transition-all active:scale-[0.98] mt-4 disabled:opacity-50"
               >
-                {loading ? 'Securing Your Audit...' : 'Claim My Free Audit'}
+                {modalLoading ? 'Securing Your Audit...' : 'Claim My Free Audit'}
               </button>
               <p className="text-[10px] text-center text-slate-500 font-bold uppercase tracking-widest mt-4">
                 Limited to 2 Audits per week
