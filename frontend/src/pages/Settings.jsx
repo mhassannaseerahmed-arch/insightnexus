@@ -12,7 +12,7 @@ const Settings = () => {
     businessHours: { start: '09:00', end: '17:00' },
     smsTemplate: '',
   });
-  const [loading, setLoading] = useState(true);
+  const [settingsLoading, setSettingsLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
 
@@ -65,7 +65,7 @@ const Settings = () => {
     }
   };
 
-  if (loading) {
+  if (settingsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-600"></div>

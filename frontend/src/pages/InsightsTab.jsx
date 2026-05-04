@@ -36,7 +36,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 const InsightsTab = () => {
   const [data, setData]     = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [insightsLoading, setInsightsLoading] = useState(true);
   const [error, setError]   = useState(null);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const InsightsTab = () => {
     fetchInsights();
   }, []);
 
-  if (loading) return (
+  if (insightsLoading) return (
     <div className="flex flex-col items-center justify-center py-32 text-slate-400">
       <svg className="w-8 h-8 animate-spin mb-4 text-violet-600" fill="none" viewBox="0 0 24 24">
         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
