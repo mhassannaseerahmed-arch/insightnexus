@@ -14,31 +14,13 @@ import Roadmap from "./components/Roadmap";
 import RevenueLeak from "./components/RevenueLeak";
 import ScheduleAudit from "./components/ScheduleAudit";
 import FOMONotifications from "./components/FOMONotifications";
+import LandingPage from "./components/LandingPage";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('token');
   if (!token) return <Navigate to="/login" replace />;
   return children;
-};
-
-const LandingPage = () => {
-  const [leakData, setLeakData] = useState({ appts: 20, rate: 20 });
-
-  return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 font-sans pt-16">
-      <FOMONotifications />
-      <main className="flex-grow">
-        <Hero />
-        <RevenueLeak onDataChange={setLeakData} />
-        <ScheduleAudit leakData={leakData} />
-        <Roadmap />
-        <Features />
-        <Waitlist />
-      </main>
-      <Footer />
-    </div>
-  );
 };
 
 const App = () => {
