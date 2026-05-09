@@ -69,4 +69,4 @@
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
-Built with ❤️ by [Your Name/Clinic Name]
+Built with love by Hassan Naseer Ahmed
