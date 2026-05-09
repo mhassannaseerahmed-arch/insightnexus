@@ -31,7 +31,7 @@
 
 1. **Clone the repo:**
    ```bash
-   git clone https://github.com/your-username/insightnexus.git
+       git clone https://github.com/mhassannaseerahmed-arch/insightnexus.git
    cd insightnexus
    ```
 
