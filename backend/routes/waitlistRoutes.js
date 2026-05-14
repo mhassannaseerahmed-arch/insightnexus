@@ -3,6 +3,7 @@
 const express = require('express')
 const router  = express.Router()
 const Waitlist = require('../models/Waitlist')
+const auth = require('../middleware/auth')
 
 // POST - Join waitlist
 router.post('/join', async (req, res) => {
@@ -28,7 +29,7 @@ router.post('/join', async (req, res) => {
 })
 
 // GET - Get all waitlist entries (admin)
-router.get('/all', async (req, res) => {
+router.get('/all', auth, async (req, res) => {
   try {
     const entries = await Waitlist.find().sort({ joinedAt: -1 })
     res.status(200).json({ success: true, count: entries.length, data: entries })

@@ -13,7 +13,7 @@ import PublicBooking from "./pages/PublicBooking";
 import Roadmap from "./components/Roadmap";
 import RevenueLeak from "./components/RevenueLeak";
 import ScheduleAudit from "./components/ScheduleAudit";
-import FOMONotifications from "./components/FOMONotifications";
+
 import LandingPage from "./components/LandingPage";
 import { Navigate } from "react-router-dom";
 

@@ -6,14 +6,14 @@ import Roadmap from './Roadmap';
 import Features from './Features';
 import Waitlist from './Waitlist';
 import Footer from './Footer';
-import FOMONotifications from './FOMONotifications';
+
 
 const LandingPage = () => {
-  const [leakData, setLeakData] = useState({ appts: 20, rate: 20 });
+  const [leakData, setLeakData] = useState({ appts: 20, rate: 20, avgRevenue: 200, fillRate: 30 });
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 font-sans pt-16">
-      <FOMONotifications />
+
       <main className="flex-grow">
         <Hero />
         <RevenueLeak onDataChange={setLeakData} />

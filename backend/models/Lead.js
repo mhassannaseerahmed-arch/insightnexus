@@ -9,7 +9,9 @@ const leadSchema = new mongoose.Schema({
   auditPath: { type: String },
   metadata: {
     appts: { type: Number },
-    rate: { type: Number }
+    rate: { type: Number },
+    avgRevenue: { type: Number },
+    fillRate: { type: Number },
   },
   createdAt: { type: Date, default: Date.now },
 });

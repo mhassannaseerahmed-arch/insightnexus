@@ -52,7 +52,7 @@ const InsightsTab = () => {
       } catch (err) {
         setError(err.message);
       } finally {
-        setLoading(false);
+        setInsightsLoading(false);
       }
     };
     fetchInsights();

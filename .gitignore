@@ -1,6 +1,8 @@
 # Root gitignore
 node_modules/
 .env
+.env.*
+!applykit/.env.example
 .DS_Store
 dist/
 build/

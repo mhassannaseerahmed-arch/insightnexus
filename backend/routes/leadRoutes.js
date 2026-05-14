@@ -2,35 +2,26 @@ const express = require('express');
 const router = express.Router();
 const Lead = require('../models/Lead');
 const { generateAuditReport } = require('../services/auditGenerator');
-const { sendAuditEmail } = require('../services/emailService');
 
 router.post('/request-audit', async (req, res) => {
   try {
-    const { name, email, clinicName, phone, appts, rate } = req.body;
+    const { name, email, clinicName, phone, appts, rate, avgRevenue, fillRate } = req.body;
     
     // Save Lead
-    const lead = new Lead({ name, email, clinicName, phone, metadata: { appts, rate } });
+    const lead = new Lead({ name, email, clinicName, phone, metadata: { appts, rate, avgRevenue, fillRate } });
     await lead.save();
 
-    // Generate Audit as Base64
-    const auditBase64 = await generateAuditReport({ ...lead.toObject(), appts, rate });
-    
-    // Email the Audit
-    try {
-      await sendAuditEmail({ name, email, clinicName }, auditBase64);
-      lead.status = 'audit-sent';
-    } catch (mailErr) {
-      console.error('Email Error:', mailErr.message);
-      lead.status = 'audit-generated-email-failed';
-    }
-    
+    // Generate Audit
+    const auditPath = await generateAuditReport({ ...lead.toObject(), appts, rate, avgRevenue, fillRate });
+    lead.auditPath = auditPath;
+    lead.status = 'audit-sent';
     await lead.save();
 
     res.status(201).json({ 
       success: true, 
-      message: 'Audit report generated and emailed successfully!',
-      auditData: auditBase64, // Keep for fallback download
-      fileName: `Audit_${clinicName.replace(/\s+/g, '_')}.pptx`
+      message: 'Audit report generated successfully!',
+      leadId: lead._id,
+      downloadUrl: `/api/leads/download-audit/${lead._id}`
     });
   } catch (err) {
     console.error('Audit Error:', err.message);

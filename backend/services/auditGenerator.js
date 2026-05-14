@@ -29,15 +29,24 @@ const generateAuditReport = async (leadData) => {
   slide2.addText("Analysis of Potential Revenue Leak", TITLE_STYLE);
   
   // Real Math based on user input
-  const estimatedAppts = leadData.appts || 20; 
-  const estimatedNoShowRate = leadData.rate || 22; 
-  const monthlyLeak = Math.round(estimatedAppts * 22 * (estimatedNoShowRate / 100) * 200);
+  const estimatedAppts = leadData.appts || 20;
+  const estimatedNoShowRate = leadData.rate || 22;
+  const estimatedAvgRevenue = leadData.avgRevenue || 200;
+  const estimatedFillRate = leadData.fillRate || 0;
+
+  const workingDaysPerMonth = 22;
+  const monthlyNoShows = estimatedAppts * workingDaysPerMonth * (estimatedNoShowRate / 100);
+  const monthlyUnfilledNoShows = monthlyNoShows * (1 - estimatedFillRate / 100);
+  const monthlyLeak = Math.round(monthlyUnfilledNoShows * estimatedAvgRevenue);
   const annualLeak = monthlyLeak * 12;
 
   slide2.addShape(pres.ShapeType.rect, { x: 0.5, y: 1.8, w: 5, h: 3.5, fill: { color: 'F1F5F9' }, radius: 0.2 });
   slide2.addText("ESTIMATED ANNUAL LOSS", { x: 0.8, y: 2.2, w: 4.4, h: 0.5, fontSize: 14, bold: true, color: COLORS.slate500 });
   slide2.addText(`$${annualLeak.toLocaleString()}`, { x: 0.8, y: 2.8, w: 4.4, h: 1, fontSize: 54, bold: true, color: COLORS.rose });
-  slide2.addText("Based on local industry benchmarks for mid-sized clinics.", { x: 0.8, y: 4.0, w: 4.4, h: 0.5, fontSize: 12, color: COLORS.slate500 });
+  slide2.addText(
+    `Estimated from volume, no-show rate, fill rate, and avg revenue per visit.`,
+    { x: 0.8, y: 4.0, w: 4.4, h: 0.6, fontSize: 12, color: COLORS.slate500 }
+  );
 
   slide2.addText([
     { text: "Critical Observations:\n", options: { bold: true, color: COLORS.slate900 } },
@@ -51,8 +60,18 @@ const generateAuditReport = async (leadData) => {
   slide3.addText("Our Recovery Strategy", TITLE_STYLE);
   slide3.addText("1. Automated 'Smart-Reminder' Sequences via Twilio\n2. AI No-Show Prediction Modeling\n3. Frictionless Re-booking Flow", { x: 0.5, y: 1.8, w: '90%', h: 3, fontSize: 24, color: COLORS.slate500 });
 
-  // Return as Base64 for Serverless
-  return await pres.write('base64');
+  // Save File
+  const fileName = `Audit_${leadData.clinicName.replace(/\s+/g, '_')}_${Date.now()}.pptx`;
+  const exportPath = path.join(__dirname, '../exports');
+  
+  if (!fs.existsSync(exportPath)) {
+    fs.mkdirSync(exportPath);
+  }
+
+  const filePath = path.join(exportPath, fileName);
+  await pres.writeFile({ fileName: filePath });
+  
+  return filePath;
 };
 
 module.exports = { generateAuditReport };

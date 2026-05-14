@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import AuditModal from './AuditModal';
 
 const Hero = () => {
-  const [isAuditOpen, setIsAuditOpen] = useState(false);
-
   return (
     <section className="relative overflow-hidden bg-[#0b0f19] pt-32 pb-20 sm:pt-40 sm:pb-24">
       {/* Animated Mesh Gradient Background */}
@@ -23,33 +20,33 @@ const Hero = () => {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
           </span>
-          FOUNDING PARTNER PROGRAM: <span className="text-white">3/5 SLOTS FILLED</span>
+          FOUNDING PARTNER PROGRAM: <span className="text-white">LIMITED CLINICS</span>
         </div>
 
         {/* Headline */}
         <h1 className="text-5xl sm:text-7xl font-black tracking-tight text-white mb-6 leading-[1.1]">
-          Stop the <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">$150B Revenue Leak</span> in your clinic.
+          Stop no‑shows from <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">bleeding revenue</span> in your clinic.
         </h1>
 
         {/* Subheadline */}
         <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed font-medium">
-          AI Nexus Insight identifies no-show patterns and automates recovery, helping you <span className="text-white font-bold">restore $2,000+ in weekly revenue</span> with zero effort.
+          AI Nexus Insight predicts risk, automates reminders, and helps you fill last‑minute gaps—so your team spends less time chasing patients and more time delivering care.
         </p>
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row justify-center gap-4 mb-20">
-          <Link
-            to="/signup"
+          <a
+            href="#revenue-leak"
             className="group relative inline-flex items-center justify-center rounded-2xl bg-white px-10 py-5 text-sm font-black text-slate-900 transition-all hover:scale-105 hover:bg-slate-50 shadow-2xl"
           >
-            Apply for Founding Partnership
-          </Link>
-          <button
-            onClick={() => setIsAuditOpen(true)}
+            Calculate My Revenue Leak
+          </a>
+          <a
+            href="#book-audit"
             className="inline-flex items-center justify-center rounded-2xl bg-white/5 px-10 py-5 text-sm font-black text-white border border-white/10 backdrop-blur-md transition-all hover:bg-white/10"
           >
-            Request Free Revenue Audit
-          </button>
+            Get Free AI Audit
+          </a>
         </div>
 
 
@@ -68,8 +65,6 @@ const Hero = () => {
         <div className="relative mx-auto max-w-4xl group">
           {/* ... existing mockup content ... */}
         </div>
-
-        <AuditModal isOpen={isAuditOpen} onClose={() => setIsAuditOpen(false)} />
       </div>
     </section>
   );

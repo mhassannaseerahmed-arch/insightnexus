@@ -9,6 +9,17 @@ const Clinic = require('../models/Clinic');
  * Handle incoming replies from patients (e.g., "YES" to confirm)
  */
 router.post('/webhook', async (req, res) => {
+  // Validate Twilio signature if configured
+  const authToken = process.env.TWILIO_AUTH_TOKEN;
+  const signature = req.header('x-twilio-signature');
+  if (authToken && signature) {
+    const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+    const valid = twilio.validateRequest(authToken, signature, url, req.body || {});
+    if (!valid) {
+      return res.status(403).send('Invalid signature');
+    }
+  }
+
   const { Body, From } = req.body;
   const twiml = new twilio.twiml.MessagingResponse();
 

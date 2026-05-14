@@ -33,7 +33,7 @@ const Settings = () => {
     } catch (err) {
       console.error('Error fetching settings:', err);
     } finally {
-      setLoading(false);
+      setSettingsLoading(false);
     }
   };
 

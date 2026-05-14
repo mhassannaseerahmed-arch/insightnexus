@@ -3,24 +3,36 @@ import React, { useState, useEffect } from 'react';
 const RevenueLeak = ({ onDataChange }) => {
   const [appts, setAppts] = useState(20);
   const [rate, setRate] = useState(20);
+  const [avgRevenue, setAvgRevenue] = useState(200);
+  const [fillRate, setFillRate] = useState(30);
   const [recoveries, setRecoveries] = useState([]);
   const LEAK_IMG = '/assets/revenue_leak.png';
+  const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   const updateAppts = (val) => {
     setAppts(val);
-    onDataChange({ appts: val, rate });
+    onDataChange({ appts: val, rate, avgRevenue, fillRate });
   };
 
   const updateRate = (val) => {
     setRate(val);
-    onDataChange({ appts, rate: val });
+    onDataChange({ appts, rate: val, avgRevenue, fillRate });
+  };
+
+  const updateAvgRevenue = (val) => {
+    setAvgRevenue(val);
+    onDataChange({ appts, rate, avgRevenue: val, fillRate });
+  };
+
+  const updateFillRate = (val) => {
+    setFillRate(val);
+    onDataChange({ appts, rate, avgRevenue, fillRate: val });
   };
 
   useEffect(() => {
     const fetchProof = async () => {
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-        const res = await fetch(`${apiUrl}/api/public/recovery-proof`);
+        const res = await fetch(`${BASE_URL}/api/public/recovery-proof`);
         const json = await res.json();
         if (json.success) {
           setRecoveries(json.data);
@@ -32,12 +44,17 @@ const RevenueLeak = ({ onDataChange }) => {
     fetchProof();
   }, []);
 
-  const monthlyLoss = Math.round(appts * 22 * (rate / 100) * 200); // 22 working days, $200 per appt
+  const workingDaysPerMonth = 22;
+  const avgWastedMinutesPerNoShow = 15;
+  const monthlyNoShows = appts * workingDaysPerMonth * (rate / 100);
+  const monthlyUnfilledNoShows = monthlyNoShows * (1 - fillRate / 100);
+
+  const monthlyLoss = Math.round(monthlyUnfilledNoShows * avgRevenue);
   const annualLoss  = monthlyLoss * 12;
-  const hoursWasted = Math.round((appts * 22 * (rate / 100)) * (15 / 60)); // 15 mins per slot wasted
+  const hoursWasted = Math.round(monthlyUnfilledNoShows * (avgWastedMinutesPerNoShow / 60));
 
   return (
-    <section className="bg-slate-900 py-24 overflow-hidden relative">
+    <section id="revenue-leak" className="bg-slate-900 py-24 overflow-hidden relative">
       <div className="absolute inset-0 bg-gradient-to-br from-violet-600/10 to-transparent"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -72,6 +89,32 @@ const RevenueLeak = ({ onDataChange }) => {
                     type="range" min="5" max="50" value={rate} 
                     onChange={(e) => updateRate(Number(e.target.value))}
                     className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-rose-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <div className="flex justify-between mb-4">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Avg. Revenue / Appt</label>
+                    <span className="text-white font-black">${avgRevenue}</span>
+                  </div>
+                  <input
+                    type="range" min="50" max="1000" step="10" value={avgRevenue}
+                    onChange={(e) => updateAvgRevenue(Number(e.target.value))}
+                    className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex justify-between mb-4">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Fill Rate</label>
+                    <span className="text-emerald-400 font-black">{fillRate}%</span>
+                  </div>
+                  <input
+                    type="range" min="0" max="90" value={fillRate}
+                    onChange={(e) => updateFillRate(Number(e.target.value))}
+                    className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
                   />
                 </div>
               </div>

@@ -31,7 +31,7 @@
 
 1. **Clone the repo:**
    ```bash
-       git clone https://github.com/mhassannaseerahmed-arch/insightnexus.git
+   git clone https://github.com/mhassannaseerahmed-arch/insightnexus.git
    cd insightnexus
    ```
 
@@ -39,12 +39,7 @@
    ```bash
    cd backend
    npm install
-   # Create a .env file with:
-   # PORT=5000
-   # MONGODB_URI=your_mongo_uri
-   # TWILIO_ACCOUNT_SID=your_sid
-   # TWILIO_AUTH_TOKEN=your_token
-   # TWILIO_PHONE_NUMBER=your_number
+   # Create a .env file with your credentials
    npm run dev
    ```
 
@@ -52,8 +47,6 @@
    ```bash
    cd ../frontend
    npm install
-   # Create a .env file with:
-   # VITE_API_URL=http://localhost:5000
    npm run dev
    ```
 
@@ -69,4 +62,4 @@
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
-Built with love by Hassan Naseer Ahmed
+Built with love by [Hassan Naseer Ahmed](https://github.com/mhassannaseerahmed-arch)

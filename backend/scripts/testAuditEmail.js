@@ -20,10 +20,10 @@ const test = async () => {
     };
 
     console.log('📊 Generating Audit Report...');
-    const auditBase64 = await generateAuditReport(leadData);
+    const auditFilePath = await generateAuditReport(leadData);
 
     console.log('📧 Sending Email...');
-    const info = await sendAuditEmail(leadData, auditBase64);
+    const info = await sendAuditEmail(leadData, auditFilePath);
 
     console.log('✅ Test Complete!');
     process.exit(0);

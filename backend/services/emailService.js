@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-const sendAuditEmail = async (leadData, auditBase64) => {
+const sendAuditEmail = async (leadData, auditFilePath) => {
   let testAccount;
   if (!process.env.EMAIL_USER) {
     testAccount = await nodemailer.createTestAccount();
@@ -37,8 +37,7 @@ const sendAuditEmail = async (leadData, auditBase64) => {
     attachments: [
       {
         filename: `Audit_${leadData.clinicName.replace(/\s+/g, '_')}.pptx`,
-        content: auditBase64,
-        encoding: 'base64'
+        path: auditFilePath,
       }
     ]
   };

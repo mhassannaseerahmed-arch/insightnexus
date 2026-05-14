@@ -2,35 +2,28 @@ import React, { useState } from 'react';
 
 const ScheduleAudit = ({ leakData }) => {
   const [formData, setFormData] = useState({ name: '', email: '', clinicName: '', phone: '' });
-  const [auditInfo, setAuditInfo] = useState(null);
-  const [auditLoading, setAuditLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [downloadUrl, setDownloadUrl] = useState(null);
+  const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setAuditLoading(true);
+    setLoading(true);
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      const res = await fetch(`${apiUrl}/api/leads/request-audit`, {
+      const res = await fetch(`${BASE_URL}/api/leads/request-audit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, ...leakData })
       });
       const json = await res.json();
       if (json.success) {
-        setAuditInfo({ data: json.auditData, name: json.fileName });
+        setDownloadUrl(json.downloadUrl);
       }
     } catch (err) {
       console.error('Audit Request Failed:', err);
     } finally {
-      setAuditLoading(false);
+      setLoading(false);
     }
-  };
-
-  const downloadAudit = () => {
-    const link = document.createElement('a');
-    link.href = `data:application/vnd.openxmlformats-officedocument.presentationml.presentation;base64,${auditInfo.data}`;
-    link.download = auditInfo.name;
-    link.click();
   };
 
   return (
@@ -47,7 +40,7 @@ const ScheduleAudit = ({ leakData }) => {
               <span className="text-violet-600">Start the recovery.</span>
             </h2>
             <p className="text-slate-500 font-medium leading-relaxed mb-10">
-              We'll analyze your {leakData.appts} daily appointments and show you how to recover your estimated ${ (leakData.appts * 22 * (leakData.rate/100) * 200 * 12).toLocaleString() } annual loss.
+              We'll analyze your {leakData.appts} daily appointments and show you how to recover your estimated ${ Math.round((leakData.appts * 22 * (leakData.rate/100) * (1 - (leakData.fillRate ?? 0)/100) * (leakData.avgRevenue ?? 200)) * 12).toLocaleString() } annual loss.
             </p>
             
             <ul className="space-y-4">
@@ -67,17 +60,17 @@ const ScheduleAudit = ({ leakData }) => {
           <div className="w-full md:w-[380px] bg-white rounded-3xl p-8 shadow-xl border border-slate-100 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-violet-600"></div>
             
-            {auditInfo ? (
+            {downloadUrl ? (
               <div className="text-center py-8">
                 <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">🏆</div>
                 <h3 className="text-xl font-black text-slate-900 mb-2">Audit Ready!</h3>
                 <p className="text-xs text-slate-500 mb-8">Your personalized strategy deck has been generated.</p>
-                <button 
-                  onClick={downloadAudit}
+                <a 
+                  href={`${BASE_URL}${downloadUrl}`}
                   className="block w-full py-5 rounded-2xl bg-emerald-600 text-white font-black text-sm hover:bg-emerald-700 transition-all text-center shadow-lg"
                 >
                   Download My Audit
-                </button>
+                </a>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -98,10 +91,10 @@ const ScheduleAudit = ({ leakData }) => {
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                 />
                 <button 
-                  type="submit" disabled={auditLoading}
+                  type="submit" disabled={loading}
                   className="w-full py-5 rounded-2xl bg-slate-900 text-white font-black text-sm hover:bg-violet-600 transition-all shadow-xl shadow-slate-900/20 active:scale-95 disabled:opacity-50"
                 >
-                  {auditLoading ? 'Generating Audit...' : 'Generate My Audit'}
+                  {loading ? 'Generating Audit...' : 'Generate My Audit'}
                 </button>
               </form>
             )}
